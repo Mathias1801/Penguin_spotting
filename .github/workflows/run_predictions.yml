@@ -25,8 +25,13 @@ jobs:
     - name: Run prediction script
       run: python predictor.py
 
+    - name: Prepare deployment folder
+      run: |
+        mkdir deploy
+        cp index.html deploy/
+
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: .  # <-- THIS is the key line
+        publish_dir: ./deploy
