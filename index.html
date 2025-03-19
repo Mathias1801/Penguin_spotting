@@ -55,7 +55,7 @@
 
     #celebration img {
       margin-top: 20px;
-      max-width: 400px;
+      max-width: 400px; /* Increased GIF size by 50% */
       border-radius: 12px;
       animation: float 2s ease-in-out infinite;
     }
@@ -83,15 +83,15 @@
         const billDepth = parseFloat(data.bill_depth_mm).toFixed(2);
         const flipperLength = parseFloat(data.flipper_length_mm).toFixed(2);
         const bodyMass = parseFloat(data.body_mass_g).toFixed(2);
-        
+
         // Update prediction text
         document.getElementById("prediction").innerHTML = `
           <h2>Penguin Prediction</h2>
           <p class="prediction-info"><span class="highlight">Timestamp:</span> ${data.timestamp}</p>
-          <p class="prediction-info"><span class="highlight">Bill Length:</span> ${data.bill_length_mm} mm</p>
-          <p class="prediction-info"><span class="highlight">Bill Depth:</span> ${data.bill_depth_mm} mm</p>
-          <p class="prediction-info"><span class="highlight">Flipper Length:</span> ${data.flipper_length_mm} mm</p>
-          <p class="prediction-info"><span class="highlight">Body Mass:</span> ${data.body_mass_g} g</p>
+          <p class="prediction-info"><span class="highlight">Bill Length:</span> ${billLength} mm</p>
+          <p class="prediction-info"><span class="highlight">Bill Depth:</span> ${billDepth} mm</p>
+          <p class="prediction-info"><span class="highlight">Flipper Length:</span> ${flipperLength} mm</p>
+          <p class="prediction-info"><span class="highlight">Body Mass:</span> ${bodyMass} g</p>
           <p class="prediction-info"><span class="highlight">Predicted Species:</span> ${data.predicted_species}</p>
         `;
 
