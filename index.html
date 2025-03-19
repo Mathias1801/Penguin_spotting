@@ -32,9 +32,20 @@
     }
 
     h2 {
-      color: #ffffff;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       font-size: 28px;
+    }
+
+    .status-success {
+      color: #00ff99;
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .status-failure {
+      color: #ff5555;
+      font-weight: bold;
+      font-size: 24px;
     }
 
     .prediction-info {
@@ -47,6 +58,16 @@
       font-weight: bold;
     }
 
+    .species-success {
+      color: #00ff99;
+      font-weight: bold;
+    }
+
+    .species-failure {
+      color: #ff5555;
+      font-weight: bold;
+    }
+
     .loading {
       font-style: italic;
       color: #aaa;
@@ -55,7 +76,7 @@
 
     #celebration img {
       margin-top: 20px;
-      max-width: 400px; /* Increased GIF size by 50% */
+      max-width: 400px; 
       border-radius: 12px;
       animation: float 2s ease-in-out infinite;
     }
@@ -84,26 +105,34 @@
         const flipperLength = parseFloat(data.flipper_length_mm).toFixed(2);
         const bodyMass = parseFloat(data.body_mass_g).toFixed(2);
 
+        const species = data.predicted_species.toLowerCase();
+        const isSuccess = species === "adelie";
+
+        // Success or Failure headline
+        const statusText = isSuccess ? "✅ SUCCESS — Adelie predicted!" : "❌ FAILURE — Not Adelie!";
+        const statusClass = isSuccess ? "status-success" : "status-failure";
+        const speciesClass = isSuccess ? "species-success" : "species-failure";
+
         // Update prediction text
         document.getElementById("prediction").innerHTML = `
-          <h2>Penguin Prediction</h2>
+          <h2 class="${statusClass}">${statusText}</h2>
           <p class="prediction-info"><span class="highlight">Timestamp:</span> ${data.timestamp}</p>
           <p class="prediction-info"><span class="highlight">Bill Length:</span> ${billLength} mm</p>
           <p class="prediction-info"><span class="highlight">Bill Depth:</span> ${billDepth} mm</p>
           <p class="prediction-info"><span class="highlight">Flipper Length:</span> ${flipperLength} mm</p>
           <p class="prediction-info"><span class="highlight">Body Mass:</span> ${bodyMass} g</p>
-          <p class="prediction-info"><span class="highlight">Predicted Species:</span> ${data.predicted_species}</p>
+          <p class="prediction-info"><span class="highlight">Predicted Species:</span> <span class="${speciesClass}">${data.predicted_species}</span></p>
         `;
 
         // Display GIF based on species
         let gifURL = "";
-        if (data.predicted_species.toLowerCase() === "adelie") {
+        if (isSuccess) {
           gifURL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDIwbXZvYjgzMzVxZnM4ZmM3cDl4aGo3emwxMjg2dnRoMmtnanpzYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9bNhBXEVnig5Br4t6M/giphy.gif";
         } else {
           gifURL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXEyMDJjazU3OHhrNG55Mno4b3psemxhMmU2aDMwYXpiMjZhcmV3bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/C87IXdLfJ44Zq/giphy.gif";
         }
 
-        document.getElementById("celebration").innerHTML = `<img src="${gifURL}" alt="Celebration GIF">`;
+        document.getElementById("celebration").innerHTML = `<img src="${gifURL}" alt="Result GIF">`;
 
       } catch (error) {
         document.getElementById("prediction").innerHTML = "<p class='loading'>Failed to load prediction.</p>";
