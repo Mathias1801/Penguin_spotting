@@ -78,6 +78,12 @@
         const response = await fetch('data/prediction.json');
         const data = await response.json();
 
+        // Format numbers to 2 decimal places
+        const billLength = parseFloat(data.bill_length_mm).toFixed(2);
+        const billDepth = parseFloat(data.bill_depth_mm).toFixed(2);
+        const flipperLength = parseFloat(data.flipper_length_mm).toFixed(2);
+        const bodyMass = parseFloat(data.body_mass_g).toFixed(2);
+        
         // Update prediction text
         document.getElementById("prediction").innerHTML = `
           <h2>Penguin Prediction</h2>
