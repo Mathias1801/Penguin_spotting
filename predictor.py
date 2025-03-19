@@ -3,16 +3,16 @@ import joblib
 import requests
 import datetime
 
-#Load the prediction model
-clf = joblib.load("models/penguin_classifier.pkl")
-label_encoder = joblib.load("models/label_encoder.pkl")
+#Load our model
+clf = joblib.load("models/penguin_classifier_model.pkl")
+label_encoder = joblib.load("models/penguin_label_encoder.pkl")
 
-#API endpoint
+#API endpoint where we fetch data
 url = "http://130.225.39.127:8000/new_penguin/"
 response = requests.get(url)
 data = response.json()
 
-#The following features are expected
+#I expect the following features
 features = [[
     data["bill_length_mm"],
     data["bill_depth_mm"],
