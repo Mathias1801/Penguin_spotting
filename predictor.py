@@ -3,22 +3,19 @@ import joblib
 import requests
 import datetime
 import os
-import csv
+import sqlite3
 from datetime import datetime as dt
 
-# Ensure data directory exists
-os.makedirs("data", exist_ok=True)
-
-# Load our model
+# Load model and label encoder
 clf = joblib.load("models/penguin_classifier_model.pkl")
 label_encoder = joblib.load("models/penguin_label_encoder.pkl")
 
-# Fetch new data from the API
+# Fetch data from API
 url = "http://130.225.39.127:8000/new_penguin/"
 response = requests.get(url)
 data = response.json()
 
-# Extract features for prediction
+# Prepare features and predict species
 features = [[
     data["bill_length_mm"],
     data["bill_depth_mm"],
@@ -26,11 +23,10 @@ features = [[
     data["body_mass_g"]
 ]]
 
-# Predict species
 species_encoded = clf.predict(features)[0]
 species = label_encoder.inverse_transform([species_encoded])[0]
 
-# Prepare prediction result
+# Prepare the prediction result
 timestamp = datetime.datetime.utcnow().isoformat()
 
 prediction_result = {
@@ -42,33 +38,48 @@ prediction_result = {
     "predicted_species": species
 }
 
-# ✅ Append to JSON file
-with open("data/predictions.json", "a") as f:
+# ✅ Overwrite JSON file with latest prediction
+with open("data/predictions.json", "w") as f:
     json.dump(prediction_result, f)
-    f.write("\n")
 
-# ✅ Append to CSV file
-csv_path = "data/predictions.csv"
-write_header = not os.path.exists(csv_path)
+# ✅ Append to SQLite DB (grow over time)
+db_path = "data/predictions.db"
+conn = sqlite3.connect(db_path)
+cursor = conn.cursor()
 
-with open(csv_path, mode="a", newline="") as f:
-    writer = csv.writer(f)
-    if write_header:
-        writer.writerow([
-            "timestamp",
-            "bill_length_mm",
-            "bill_depth_mm",
-            "flipper_length_mm",
-            "body_mass_g",
-            "predicted_species"
-        ])
-    writer.writerow([
+# Create table if not exists
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS predictions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp TEXT,
+        bill_length_mm REAL,
+        bill_depth_mm REAL,
+        flipper_length_mm REAL,
+        body_mass_g REAL,
+        predicted_species TEXT
+    )
+""")
+
+# Insert today's prediction
+cursor.execute("""
+    INSERT INTO predictions (
         timestamp,
-        data["bill_length_mm"],
-        data["bill_depth_mm"],
-        data["flipper_length_mm"],
-        data["body_mass_g"],
-        species
-    ])
+        bill_length_mm,
+        bill_depth_mm,
+        flipper_length_mm,
+        body_mass_g,
+        predicted_species
+    ) VALUES (?, ?, ?, ?, ?, ?)
+""", (
+    timestamp,
+    data["bill_length_mm"],
+    data["bill_depth_mm"],
+    data["flipper_length_mm"],
+    data["body_mass_g"],
+    species
+))
 
-print("✅ Prediction saved to both JSON and CSV.")
+conn.commit()
+conn.close()
+
+print("✅ JSON overwritten and prediction saved to SQLite.")
