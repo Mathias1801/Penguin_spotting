@@ -29,3 +29,15 @@ db_path = "output/predictions.db"
 conn = sqlite3.connect(db_path)
 df.to_sql("predictions", conn, if_exists="append", index=False)
 conn.close()
+
+# Also export an HTML version for GitHub Pages display
+html_path = "output/predictions.html"
+
+# Add emojis/GIFs column
+df['celebration'] = df['predicted_species'].apply(
+    lambda x: '<img src="https://media.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif" width="60">' if x == "Adelie"
+    else '<img src="https://media.giphy.com/media/3o6ZtaO9BZHcOjmErm/giphy.gif" width="60">'
+)
+
+# Save styled HTML table
+df.to_html(html_path, index=False, escape=False)
