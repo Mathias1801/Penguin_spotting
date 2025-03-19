@@ -2,7 +2,7 @@ name: Daily Predictions Update
 
 on:
   schedule:
-    - cron: '30 5 * * *'  # 07:30 Copenhagen (UTC+2 in summer / UTC+1 in winter)
+    - cron: '30 5 * * *'  # 07:30 Copenhagen time
   workflow_dispatch:
 
 jobs:
@@ -25,8 +25,8 @@ jobs:
     - name: Run prediction script
       run: python predictor.py
 
-    - name: Deploy to GitHub Pages
+    - name: Deploy prediction.json to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./output
+        publish_dir: ./data
