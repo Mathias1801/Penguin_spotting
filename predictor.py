@@ -43,19 +43,36 @@ with open("predictions.json", "a") as f:
 # === SQLite Logging ===
 conn = sqlite3.connect("data/predictions.db")
 cursor = conn.cursor()
+
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS predictions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         timestamp TEXT,
-        features TEXT,
-        prediction TEXT
+        bill_length_mm REAL,
+        bill_depth_mm REAL,
+        flipper_length_mm REAL,
+        body_mass_g REAL,
+        predicted_species TEXT
     )
 """)
 
-cursor.execute(
-    "INSERT INTO predictions (timestamp, features, prediction) VALUES (?, ?, ?)",
-    (datetime.datetime.now().isoformat(), json.dumps(features), json.dumps(species))
-)
+cursor.execute("""
+    INSERT INTO predictions (
+        timestamp,
+        bill_length_mm,
+        bill_depth_mm,
+        flipper_length_mm,
+        body_mass_g,
+        predicted_species
+    ) VALUES (?, ?, ?, ?, ?, ?)
+""", (
+    datetime.datetime.utcnow().isoformat(),
+    data["bill_length_mm"],
+    data["bill_depth_mm"],
+    data["flipper_length_mm"],
+    data["body_mass_g"],
+    species
+))
 
 conn.commit()
 conn.close()
