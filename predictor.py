@@ -39,47 +39,5 @@ prediction_result = {
 }
 
 # ✅ Overwrite JSON file with latest prediction
-with open("data/predictions.json", "w") as f:
+with open("data/predictions.json", "a") as f:
     json.dump(prediction_result, f)
-
-# ✅ Append to SQLite DB (grow over time)
-db_path = "data/predictions.db"
-conn = sqlite3.connect(db_path)
-cursor = conn.cursor()
-
-# Create table if not exists
-cursor.execute("""
-    CREATE TABLE IF NOT EXISTS predictions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        timestamp TEXT,
-        bill_length_mm REAL,
-        bill_depth_mm REAL,
-        flipper_length_mm REAL,
-        body_mass_g REAL,
-        predicted_species TEXT
-    )
-""")
-
-# Insert today's prediction
-cursor.execute("""
-    INSERT INTO predictions (
-        timestamp,
-        bill_length_mm,
-        bill_depth_mm,
-        flipper_length_mm,
-        body_mass_g,
-        predicted_species
-    ) VALUES (?, ?, ?, ?, ?, ?)
-""", (
-    timestamp,
-    data["bill_length_mm"],
-    data["bill_depth_mm"],
-    data["flipper_length_mm"],
-    data["body_mass_g"],
-    species
-))
-
-conn.commit()
-conn.close()
-
-print("✅ JSON overwritten and prediction saved to SQLite.")
