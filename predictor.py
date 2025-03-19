@@ -2,19 +2,23 @@ import json
 import joblib
 import requests
 import datetime
-import sqlite3
+import os
+import csv
 from datetime import datetime as dt
+
+# Ensure data directory exists
+os.makedirs("data", exist_ok=True)
 
 # Load our model
 clf = joblib.load("models/penguin_classifier_model.pkl")
 label_encoder = joblib.load("models/penguin_label_encoder.pkl")
 
-# API endpoint where we fetch data
+# Fetch new data from the API
 url = "http://130.225.39.127:8000/new_penguin/"
 response = requests.get(url)
 data = response.json()
 
-# Extract features
+# Extract features for prediction
 features = [[
     data["bill_length_mm"],
     data["bill_depth_mm"],
@@ -26,9 +30,11 @@ features = [[
 species_encoded = clf.predict(features)[0]
 species = label_encoder.inverse_transform([species_encoded])[0]
 
-# Save to JSON file
+# Prepare prediction result
+timestamp = datetime.datetime.utcnow().isoformat()
+
 prediction_result = {
-    "timestamp": datetime.datetime.utcnow().isoformat(),
+    "timestamp": timestamp,
     "bill_length_mm": data["bill_length_mm"],
     "bill_depth_mm": data["bill_depth_mm"],
     "flipper_length_mm": data["flipper_length_mm"],
@@ -36,6 +42,7 @@ prediction_result = {
     "predicted_species": species
 }
 
-with open("predictions.json", "a") as f:
+# ✅ Append to JSON file
+with open("data/predictions.json", "a") as f:
     json.dump(prediction_result, f)
     f.write("\n")
