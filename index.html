@@ -15,6 +15,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      flex-direction: column;
     }
 
     .container {
@@ -46,12 +47,20 @@
       font-style: italic;
       color: #888;
     }
+
+    #celebration img {
+      margin-top: 20px;
+      max-width: 200px;
+    }
   </style>
+
   <script>
     async function loadPrediction() {
       try {
         const response = await fetch('data/prediction.json');
         const data = await response.json();
+
+        // Update prediction text
         document.getElementById("prediction").innerHTML = `
           <h2>Penguin Prediction</h2>
           <p class="prediction-info"><span class="highlight">Timestamp:</span> ${data.timestamp}</p>
@@ -61,16 +70,29 @@
           <p class="prediction-info"><span class="highlight">Body Mass:</span> ${data.body_mass_g} g</p>
           <p class="prediction-info"><span class="highlight">Predicted Species:</span> ${data.predicted_species}</p>
         `;
+
+        // Display GIF based on species
+        let gifURL = "";
+        if (data.predicted_species.toLowerCase() === "adelie") {
+          gifURL = "https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif"; // Confetti GIF
+        } else {
+          gifURL = "https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"; // Detective/cat GIF
+        }
+
+        document.getElementById("celebration").innerHTML = `<img src="${gifURL}" alt="Celebration GIF">`;
+
       } catch (error) {
         document.getElementById("prediction").innerHTML = "<p class='loading'>Failed to load prediction.</p>";
       }
     }
+
     window.onload = loadPrediction;
   </script>
 </head>
 <body>
   <div class="container">
     <div id="prediction" class="loading">Loading prediction...</div>
+    <div id="celebration"></div>
   </div>
 </body>
 </html>
