@@ -1,12 +1,12 @@
-name: Daily Predictions to SQLite and GitHub Pages
+name: Daily Predictions Update
 
 on:
   schedule:
-    - cron: '30 5 * * *'  # ⏰ 07:30 AM Copenhagen (UTC+2 in summer, UTC+1 in winter)
-  workflow_dispatch:       # Allow manual run
+    - cron: '30 5 * * *'  # 07:30 Copenhagen (UTC+2 in summer / UTC+1 in winter)
+  workflow_dispatch:
 
 jobs:
-  build:
+  run:
     runs-on: ubuntu-latest
 
     steps:
