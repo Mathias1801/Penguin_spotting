@@ -1,74 +1,76 @@
-<!-- output/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Penguin Predictions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐧 Penguin Predictions 🐧</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f5f7fa;
-            padding: 2em;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #74ebd5, #acb6e5);
             color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        h1 {
-            text-align: center;
-            color: #006699;
-        }
-        .table-container {
-            max-width: 1000px;
-            margin: auto;
-            background: white;
-            padding: 2em;
+
+        .container {
+            background: #fff;
+            padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1em;
-        }
-        th, td {
-            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
-            border: 1px solid #ddd;
+            max-width: 400px;
+            width: 100%;
         }
-        th {
-            background-color: #e6f2ff;
+
+        h2 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .prediction-info {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .loading {
+            font-style: italic;
+            color: #888;
         }
     </style>
+    <script>
+        async function loadPrediction() {
+            try {
+                const response = await fetch('data/prediction.json');
+                const data = await response.json();
+                document.getElementById("prediction").innerHTML = `
+                    <h2>Penguin Prediction</h2>
+                    <p class="prediction-info"><span class="highlight">Timestamp:</span> ${data.timestamp}</p>
+                    <p class="prediction-info"><span class="highlight">Bill Length:</span> ${data.bill_length_mm} mm</p>
+                    <p class="prediction-info"><span class="highlight">Bill Depth:</span> ${data.bill_depth_mm} mm</p>
+                    <p class="prediction-info"><span class="highlight">Flipper Length:</span> ${data.flipper_length_mm} mm</p>
+                    <p class="prediction-info"><span class="highlight">Body Mass:</span> ${data.body_mass_g} g</p>
+                    <p class="prediction-info"><span class="highlight">Predicted Species:</span> ${data.predicted_species}</p>
+                `;
+            } catch (error) {
+                document.getElementById("prediction").innerHTML = "<p class='loading'>Failed to load prediction.</p>";
+            }
+        }
+        window.onload = loadPrediction;
+    </script>
 </head>
 <body>
-    <h1>🐧 Daily Penguin Species Predictions</h1>
-    <div class="table-container">
-        <!-- Inject the predictions table here -->
-        <!-- This assumes predictions.html is in the same folder -->
-        <iframe src="predictions.html" width="100%" height="600px" style="border:none;"></iframe>
+    <div class="container">
+        <div id="prediction" class="loading">Loading prediction...</div>
     </div>
-
-    <h2>Latest Penguin Prediction</h2>
-    <pre id="prediction-output">Loading...</pre>
-
-    <script>
-    async function loadPrediction() {
-        try {
-            const response = await fetch('data/prediction.json');
-            const data = await response.json();
-            document.getElementById("prediction").innerHTML = `
-                <h2>Penguin Prediction</h2>
-                <p class="prediction-info"><span class="highlight">Timestamp:</span> ${data.timestamp}</p>
-                <p class="prediction-info"><span class="highlight">Bill Length:</span> ${data.bill_length_mm} mm</p>
-                <p class="prediction-info"><span class="highlight">Bill Depth:</span> ${data.bill_depth_mm} mm</p>
-                <p class="prediction-info"><span class="highlight">Flipper Length:</span> ${data.flipper_length_mm} mm</p>
-                <p class="prediction-info"><span class="highlight">Body Mass:</span> ${data.body_mass_g} g</p>
-                <p class="prediction-info"><span class="highlight">Predicted Species:</span> ${data.predicted_species}</p>
-            `;
-        } catch (error) {
-            document.getElementById("prediction").innerHTML = "<p class='loading'>Failed to load prediction.</p>";
-        }
-    }
-    window.onload = loadPrediction;
-</script>
 </body>
 </html>
