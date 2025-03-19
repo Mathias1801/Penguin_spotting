@@ -2,40 +2,31 @@ name: Daily Predictions Update
 
 on:
   schedule:
-    - cron: '30 5 * * *'  # 07:30 Copenhagen time
+    - cron: '30 5 * * *'
   workflow_dispatch:
 
 jobs:
-  fetch_and_predict:
+  run:
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Verify Files Exist (Debugging Step)
-        run: ls -l
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
 
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
+    - name: Run prediction script
+      run: python predictor.py
 
-      - name: Run Prediction Script
-        run: python predictor.py
-
-      - name: Commit and Push JSON Prediction
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-          git add data/prediction.json
-          git commit -m "Updated prediction data" || echo "No changes to commit"
-          git push origin main
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: .  # <-- THIS is the key line
