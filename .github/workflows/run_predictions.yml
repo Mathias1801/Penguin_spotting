@@ -1,0 +1,32 @@
+name: Daily Predictions to SQLite and GitHub Pages
+
+on:
+  schedule:
+    - cron: '30 5 * * *'  # ⏰ 07:30 AM Copenhagen (UTC+2 in summer, UTC+1 in winter)
+  workflow_dispatch:       # Allow manual run
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+
+    - name: Run prediction script
+      run: python predictor.py
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./output
