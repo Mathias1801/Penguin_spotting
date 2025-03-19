@@ -6,51 +6,69 @@
   <title>🐧 Penguin Predictions 🐧</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(to right, #74ebd5, #acb6e5);
-      color: #333;
       margin: 0;
       padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at center, #0f2027, #203a43, #2c5364);
+      color: #eee;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      flex-direction: column;
+      overflow: hidden;
     }
 
     .container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      max-width: 500px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      padding: 30px;
       width: 90%;
+      max-width: 600px;
+      text-align: center;
+      animation: fadeIn 1.2s ease;
     }
 
     h2 {
-      margin-bottom: 10px;
-      color: #2c3e50;
+      color: #ffffff;
+      margin-bottom: 20px;
+      font-size: 28px;
     }
 
     .prediction-info {
       font-size: 18px;
-      line-height: 1.6;
+      line-height: 1.8;
     }
 
     .highlight {
+      color: #00d8ff;
       font-weight: bold;
-      color: #3498db;
     }
 
     .loading {
       font-style: italic;
-      color: #888;
+      color: #aaa;
+      font-size: 16px;
     }
 
     #celebration img {
       margin-top: 20px;
-      max-width: 200px;
+      max-width: 220px;
+      border-radius: 12px;
+      animation: float 2s ease-in-out infinite;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
     }
   </style>
 
@@ -74,9 +92,9 @@
         // Display GIF based on species
         let gifURL = "";
         if (data.predicted_species.toLowerCase() === "adelie") {
-          gifURL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDIwbXZvYjgzMzVxZnM4ZmM3cDl4aGo3emwxMjg2dnRoMmtnanpzYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9bNhBXEVnig5Br4t6M/giphy.gif"; // Confetti GIF
+          gifURL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDIwbXZvYjgzMzVxZnM4ZmM3cDl4aGo3emwxMjg2dnRoMmtnanpzYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9bNhBXEVnig5Br4t6M/giphy.gif";
         } else {
-          gifURL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXEyMDJjazU3OHhrNG55Mno4b3psemxhMmU2aDMwYXpiMjZhcmV3bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/C87IXdLfJ44Zq/giphy.gif"; // Detective/cat GIF
+          gifURL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXEyMDJjazU3OHhrNG55Mno4b3psemxhMmU2aDMwYXpiMjZhcmV3bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/C87IXdLfJ44Zq/giphy.gif";
         }
 
         document.getElementById("celebration").innerHTML = `<img src="${gifURL}" alt="Celebration GIF">`;
