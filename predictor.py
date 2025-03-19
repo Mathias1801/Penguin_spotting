@@ -40,19 +40,24 @@ pred_encoded = model.predict(df_scaled)
 df["predicted_species"] = label_encoder.inverse_transform(pred_encoded)
 df["prediction_timestamp"] = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 
-# === Step 5: Add GIF logic
-df['celebration'] = df['predicted_species'].apply(
-    lambda x: '<img src="https://media.giphy.com/media/26BRrSvJUa0crqw4E/giphy.gif" width="60">' if x == "Adelie"
-    else '<img src="https://media.giphy.com/media/3o6ZtaO9BZHcOjmErm/giphy.gif" width="60">'
-)
-
-# === Step 6: Save to SQLite
-os.makedirs("output", exist_ok=True)
-db_path = os.path.join("output", "predictions.db")
-conn = sqlite3.connect(db_path)
+# === Step 5: Save to SQLite database
+os.makedirs(".output", exist_ok=True)
+conn = sqlite3.connect(".output/predictions.db")
+df["prediction"] = label_encoder.inverse_transform(preds)
+df["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 df.to_sql("predictions", conn, if_exists="append", index=False)
 conn.close()
-print("✅ Saved to SQLite DB")
+
+# === Step 6: Save latest prediction as JSON (for GitHub Pages)
+os.makedirs("data", exist_ok=True)
+latest_prediction = df.tail(1).to_dict(orient="records")[0]
+
+# Save prediction.json
+with open("data/prediction.json", "w") as f:
+    import json
+    json.dump(latest_prediction, f, indent=4)
+
+print("✅ Prediction saved to database and JSON.")
 
 # === Step 7: Export to HTML
 html_path = os.path.join("output", "predictions.html")
