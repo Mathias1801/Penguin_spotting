@@ -51,15 +51,24 @@
     <pre id="prediction-output">Loading...</pre>
 
     <script>
-    fetch('prediction.json')
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('prediction-output').textContent = JSON.stringify(data, null, 2);
-      })
-      .catch(error => {
-        document.getElementById('prediction-output').textContent = 'Failed to load prediction.';
-        console.error(error);
-      });
-    </script>
+    async function loadPrediction() {
+        try {
+            const response = await fetch('data/prediction.json');
+            const data = await response.json();
+            document.getElementById("prediction").innerHTML = `
+                <h2>Penguin Prediction</h2>
+                <p class="prediction-info"><span class="highlight">Timestamp:</span> ${data.timestamp}</p>
+                <p class="prediction-info"><span class="highlight">Bill Length:</span> ${data.bill_length_mm} mm</p>
+                <p class="prediction-info"><span class="highlight">Bill Depth:</span> ${data.bill_depth_mm} mm</p>
+                <p class="prediction-info"><span class="highlight">Flipper Length:</span> ${data.flipper_length_mm} mm</p>
+                <p class="prediction-info"><span class="highlight">Body Mass:</span> ${data.body_mass_g} g</p>
+                <p class="prediction-info"><span class="highlight">Predicted Species:</span> ${data.predicted_species}</p>
+            `;
+        } catch (error) {
+            document.getElementById("prediction").innerHTML = "<p class='loading'>Failed to load prediction.</p>";
+        }
+    }
+    window.onload = loadPrediction;
+</script>
 </body>
 </html>
