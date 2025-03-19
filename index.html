@@ -46,5 +46,20 @@
         <!-- This assumes predictions.html is in the same folder -->
         <iframe src="predictions.html" width="100%" height="600px" style="border:none;"></iframe>
     </div>
+
+    <h2>Latest Penguin Prediction</h2>
+    <pre id="prediction-output">Loading...</pre>
+
+    <script>
+    fetch('prediction.json')
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('prediction-output').textContent = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        document.getElementById('prediction-output').textContent = 'Failed to load prediction.';
+        console.error(error);
+      });
+    </script>
 </body>
 </html>
