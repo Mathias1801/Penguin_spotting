@@ -40,12 +40,14 @@
       color: #00ff99;
       font-weight: bold;
       font-size: 24px;
+      margin-top: 15px;
     }
 
     .status-failure {
       color: #ff5555;
       font-weight: bold;
       font-size: 24px;
+      margin-top: 15px;
     }
 
     .prediction-info {
@@ -99,7 +101,6 @@
         const response = await fetch('data/prediction.json');
         const data = await response.json();
 
-        // Format numbers to 2 decimal places
         const billLength = parseFloat(data.bill_length_mm).toFixed(2);
         const billDepth = parseFloat(data.bill_depth_mm).toFixed(2);
         const flipperLength = parseFloat(data.flipper_length_mm).toFixed(2);
@@ -108,14 +109,11 @@
         const species = data.predicted_species.toLowerCase();
         const isSuccess = species === "adelie";
 
-        // Success or Failure headline
-        const statusText = isSuccess ? "✅ SUCCESS — Adelie predicted!" : "❌ FAILURE — Not Adelie!";
-        const statusClass = isSuccess ? "status-success" : "status-failure";
         const speciesClass = isSuccess ? "species-success" : "species-failure";
 
-        // Update prediction text
+        // Update prediction info block
         document.getElementById("prediction").innerHTML = `
-          <h2 class="${statusClass}">${statusText}</h2>
+          <h2>Penguin Prediction</h2>
           <p class="prediction-info"><span class="highlight">Timestamp:</span> ${data.timestamp}</p>
           <p class="prediction-info"><span class="highlight">Bill Length:</span> ${billLength} mm</p>
           <p class="prediction-info"><span class="highlight">Bill Depth:</span> ${billDepth} mm</p>
@@ -124,15 +122,19 @@
           <p class="prediction-info"><span class="highlight">Predicted Species:</span> <span class="${speciesClass}">${data.predicted_species}</span></p>
         `;
 
-        // Display GIF based on species
-        let gifURL = "";
-        if (isSuccess) {
-          gifURL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDIwbXZvYjgzMzVxZnM4ZmM3cDl4aGo3emwxMjg2dnRoMmtnanpzYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9bNhBXEVnig5Br4t6M/giphy.gif";
-        } else {
-          gifURL = "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXEyMDJjazU3OHhrNG55Mno4b3psemxhMmU2aDMwYXpiMjZhcmV3bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/C87IXdLfJ44Zq/giphy.gif";
-        }
+        // Set up the GIF and message (message now comes AFTER GIF)
+        let gifURL = isSuccess
+          ? "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDIwbXZvYjgzMzVxZnM4ZmM3cDl4aGo3emwxMjg2dnRoMmtnanpzYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9bNhBXEVnig5Br4t6M/giphy.gif"
+          : "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXEyMDJjazU3OHhrNG55Mno4b3psemxhMmU2aDMwYXpiMjZhcmV3bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/C87IXdLfJ44Zq/giphy.gif";
 
-        document.getElementById("celebration").innerHTML = `<img src="${gifURL}" alt="Result GIF">`;
+        const resultMessage = isSuccess
+          ? `<div class="status-success">✅ SUCCESS — WE FOUND ONE OF THEM! ✅</div>`
+          : `<div class="status-failure">❌ FAILURE — It's a distraction-penguin ❌</div>`;
+
+        document.getElementById("celebration").innerHTML = `
+          <img src="${gifURL}" alt="Result GIF">
+          ${resultMessage}
+        `;
 
       } catch (error) {
         document.getElementById("prediction").innerHTML = "<p class='loading'>Failed to load prediction.</p>";
