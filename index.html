@@ -14,6 +14,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      height: 100vh;
       overflow: hidden;
     }
 
@@ -26,7 +27,6 @@
       padding: 30px;
       width: 90%;
       max-width: 600px;
-      height: 600px;
       text-align: center;
       animation: fadeIn 1.2s ease;
     }
@@ -101,35 +101,29 @@
         const response = await fetch('data/prediction.json');
         const data = await response.json();
 
-        if (!Array.isArray(data) || data.length === 0) {
-          document.getElementById("prediction").innerHTML = "<p class='loading'>No predictions found yet.</p>";
-          return;
-        }
+        const billLength = parseFloat(data.bill_length_mm).toFixed(2);
+        const billDepth = parseFloat(data.bill_depth_mm).toFixed(2);
+        const flipperLength = parseFloat(data.flipper_length_mm).toFixed(2);
+        const bodyMass = parseFloat(data.body_mass_g).toFixed(2);
 
-        // Get the most recent prediction (last in the array)
-        const latest = data[data.length - 1];
-
-        const billLength = parseFloat(latest.bill_length_mm).toFixed(2);
-        const billDepth = parseFloat(latest.bill_depth_mm).toFixed(2);
-        const flipperLength = parseFloat(latest.flipper_length_mm).toFixed(2);
-        const bodyMass = parseFloat(latest.body_mass_g).toFixed(2);
-        const species = latest.predicted_species.toLowerCase();
+        const species = data.predicted_species.toLowerCase();
         const isSuccess = species === "adelie";
+
         const speciesClass = isSuccess ? "species-success" : "species-failure";
 
-        // Update prediction display
+        // Update prediction info block
         document.getElementById("prediction").innerHTML = `
-          <h2>🔍We found a penguin!🔎</h2>
-          <p class="prediction-info"><span class="highlight">Timestamp:</span> ${latest.timestamp}</p>
+          <h2>Penguin Prediction</h2>
+          <p class="prediction-info"><span class="highlight">Timestamp:</span> ${data.timestamp}</p>
           <p class="prediction-info"><span class="highlight">Bill Length:</span> ${billLength} mm</p>
           <p class="prediction-info"><span class="highlight">Bill Depth:</span> ${billDepth} mm</p>
           <p class="prediction-info"><span class="highlight">Flipper Length:</span> ${flipperLength} mm</p>
           <p class="prediction-info"><span class="highlight">Body Mass:</span> ${bodyMass} g</p>
-          <p class="prediction-info"><span class="highlight">Predicted Species:</span> <span class="${speciesClass}">${latest.predicted_species}</span></p>
+          <p class="prediction-info"><span class="highlight">Predicted Species:</span> <span class="${speciesClass}">${data.predicted_species}</span></p>
         `;
 
-        // Choose GIF and success/failure message
-        const gifURL = isSuccess
+        // Set up the GIF and message (message now comes AFTER GIF)
+        let gifURL = isSuccess
           ? "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaDIwbXZvYjgzMzVxZnM4ZmM3cDl4aGo3emwxMjg2dnRoMmtnanpzYyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9bNhBXEVnig5Br4t6M/giphy.gif"
           : "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXEyMDJjazU3OHhrNG55Mno4b3psemxhMmU2aDMwYXpiMjZhcmV3bCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/C87IXdLfJ44Zq/giphy.gif";
 
@@ -144,7 +138,6 @@
 
       } catch (error) {
         document.getElementById("prediction").innerHTML = "<p class='loading'>Failed to load prediction.</p>";
-        console.error("Prediction load error:", error);
       }
     }
 
