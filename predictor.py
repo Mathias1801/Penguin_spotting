@@ -54,25 +54,4 @@ predictions.append(prediction_result)
 with open(prediction_file_path, "w") as f:
     json.dump(predictions, f, indent=4)
 
-# ✅ Save to CSV
-def append_to_csv(prediction, csv_path="data/predictions.csv"):
-    fieldnames = ['timestamp'] + feature_order + ['predicted_species']
-    write_header = False
-
-    # Check if header is already there
-    if not os.path.exists(csv_path) or os.path.getsize(csv_path) == 0:
-        write_header = True
-
-    try:
-        with open(csv_path, mode='a', newline='') as csvfile:
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            if write_header:
-                writer.writeheader()
-            writer.writerow({field: prediction.get(field, "") for field in fieldnames})
-    except Exception as e:
-        print(f"❌ Error writing to CSV: {e}")
-
-# Append the result to CSV
-append_to_csv(prediction_result)
-
 print(f"✅ Prediction saved: {prediction_result}")
