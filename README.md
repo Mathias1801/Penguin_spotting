@@ -5,7 +5,7 @@ This project is an end-to-end machine learning pipeline and MLOps workflow for c
 
 ---
 
-## 📦 Project Structure
+## Project Structure
 
 ```
 .
@@ -23,6 +23,29 @@ This project is an end-to-end machine learning pipeline and MLOps workflow for c
     └── workflows/
         └── run_predictions.yml # GitHub Actions workflow for automated predictions
 ```
+
+---
+
+## Feature Selection & Modeling Process
+
+For this assignment, relevant feature selection was performed based on exploratory data analysis.  
+The following features were selected due to their strong correlation with species classification:
+
+- `bill_length_mm`
+- `bill_depth_mm`
+- `flipper_length_mm`
+- `body_mass_g`
+
+These features were chosen because they represent key anatomical traits that vary between penguin species, as observed in the dataset.  
+
+The data was then split into training and testing sets, and standard scaling was applied to numeric features. The prediction report indicated that all the trained model had 100% accuracy but in the playgroundfolder more detail-focused plots show how the different methods result in diffent approaches to feature selection. I chose to work with the Wrapper method focusing in recursive feature eliminationwhich was saved in the repository under `/models`.
+
+---
+
+## Note
+
+Although the assignment specified using a SQL database, I encountered some challenges working with SQL in this context.  
+As a workaround, I adapted the workflow to use a structured JSON format instead, which allowed for easier data handling and integration into the pipeline.
 
 ---
 
