@@ -30,5 +30,13 @@
         "flipper_length_mm": 191.71609291680966,
         "body_mass_g": 3810.510584004772,
         "predicted_species": "Gentoo"
+    },
+    {
+        "timestamp": "2025-03-23T06:45:02.634041",
+        "bill_length_mm": 49.768358009041414,
+        "bill_depth_mm": 15.207950439917802,
+        "flipper_length_mm": 190.64758565247874,
+        "body_mass_g": 4140.519429191219,
+        "predicted_species": "Gentoo"
     }
 ]
