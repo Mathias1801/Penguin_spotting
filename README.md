@@ -99,3 +99,8 @@ Alternatively, explore and manipulate predictions in `playground.ipynb`.
 ## CI/CD
 
 This project includes a workflow file at `.github/workflows/run_predictions.yml` to automate the prediction process when new data is pushed or changes occur. This is done through Github Actions and it is made with the goal of scraping data everyday at 07:30 am (UTC/GMT +1 hour).
+
+---
+
+## NB:
+The prediction this repo deploys is wrong most of the time. The Seaborn dataset on penguins is very limit in the data availiable across seasons. The file called 'playground' creates a "perfect" prediction, but it is wrong, because the weight of the penguins vary dependant on season, but the data does not take this into account.
