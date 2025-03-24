@@ -102,5 +102,5 @@ This project includes a workflow file at `.github/workflows/run_predictions.yml`
 
 ---
 
-## NB:
+## NB
 The prediction this repo deploys is wrong most of the time. The Seaborn dataset on penguins is very limit in the data availiable across seasons. The file called 'playground' creates a "perfect" prediction, but it is wrong, because the weight of the penguins vary dependant on season, but the data does not take this into account.
