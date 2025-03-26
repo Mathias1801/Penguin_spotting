@@ -3,7 +3,7 @@
 This repository contains my submission for the MLOps Assignment 1, where the goal is to build a machine learning pipeline for classifying penguin species — with a focus on daily webscraping!
 This project is an end-to-end machine learning pipeline and MLOps workflow for classifying penguin species based on given features. It includes model training, prediction scripts, CI/CD setup using GitHub Actions, and a playground for testing and colculating models.
 
-The projects is deployed in github pages: https://mathias1801.github.io/MLOps_Assignment_1/ 
+The projects is deployed in github pages: https://mathias1801.github.io/Penguin_spotting/ 
 
 ---
 
