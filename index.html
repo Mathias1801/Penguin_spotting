@@ -113,7 +113,7 @@
         const flipperLength = parseFloat(latest.flipper_length_mm).toFixed(2);
         const bodyMass = parseFloat(latest.body_mass_g).toFixed(2);
         const species = latest.predicted_species.toLowerCase();
-        const isSuccess = species === "gento";
+        const isSuccess = species === "adelie";
         const speciesClass = isSuccess ? "species-success" : "species-failure";
 
         // Update prediction display
